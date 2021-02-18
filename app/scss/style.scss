@@ -1,0 +1,13 @@
+// style.scss
+
+@import '_variables';
+//@import '~bootstrap/scss/bootstrap';
+@import "node_modules/bootstrap/scss/bootstrap";
+//@import "bootstrap/scss/bootstrap";
+@import 'base';
+@import 'components';
+@import 'layout';
+@import 'pages';
+@import 'themes';
+@import 'utils';
+@import 'vendors';

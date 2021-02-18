@@ -1,0 +1,33 @@
+// Base
+.icon {
+  display: inline-block;
+  width: $font-size-base;
+  height: $font-size-base;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
+  -webkit-box-flex: 0;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+a[href*="mailto:"],
+a[href*="tel:"] {
+  white-space: nowrap;
+}
+
+html {
+  font-size: 16px;
+
+  @include media-breakpoint-down(xxl) {
+    font-size: 14px;
+  }
+}
+
+body {
+  font-size: $font-size-base;
+  line-height: 1.5 * $font-size-base;
+  font-style: normal;
+}

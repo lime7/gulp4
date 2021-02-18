@@ -1,0 +1,4 @@
+node_modules
+app/bower
+dist
+package-lock.json
