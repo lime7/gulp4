@@ -2,17 +2,21 @@
  
 // Load plugins
 const gulp          = require('gulp'),
-      autoprefixer  = require("autoprefixer"),	
+      autoprefixer  = require('autoprefixer'),	
       sass          = require('gulp-sass'),
-      cssnano       = require("cssnano"),
-      postcss       = require("gulp-postcss"),
+      cssnano       = require('cssnano'),
+      postcss       = require('gulp-postcss'),
       imagemin      = require('gulp-imagemin'),
       uglify        = require('gulp-uglify'),
+      rename        = require('gulp-rename'),
       watch         = require('gulp-watch'),
       clean         = require('gulp-clean'),
       htmlPartial   = require('gulp-html-partial'),
       browserSync   = require('browser-sync').create(),
-      reload        = browserSync.reload;
+      reload        = browserSync.reload,
+      eslint        = require('gulp-eslint'),
+      plumber       = require('gulp-plumber'),
+      gulpStylelint = require('gulp-stylelint');
 
 // Paths
 var path = {
@@ -20,6 +24,7 @@ var path = {
 		html   : 'app/*.html',
 		partials: 'app/partials/',
 		js     : 'app/js/**/*.js',
+		gulpFile: './gulpfile.js',
 		scss   : 'app/scss/style.scss',		
 		images : 'app/images/**/*.*',
 		fonts  : 'app/fonts/**/*.*',
@@ -46,14 +51,23 @@ var path = {
 // HTML task
 function html() {
     gulp.src(path.app.html)
-    	.pipe(htmlPartial({
-    	    basePath: path.app.partials
-    	}))
+		.pipe(htmlPartial({
+			basePath: path.app.partials
+		}))
 		.pipe(gulp.dest(path.dist.html));
 }
 
+// JS Lint scripts
+function scriptsLint() {
+	return gulp.src([path.app.js, path.app.gulpFile])
+		.pipe(plumber())
+		.pipe(eslint())
+		.pipe(eslint.format())
+		.pipe(eslint.failAfterError());
+}
+
 // JS task
-function js() {
+function scripts() {
 	return gulp.src(path.app.js)
 		.pipe(uglify())
 		.pipe(gulp.dest(path.dist.js));
@@ -65,9 +79,22 @@ sass.compiler = require('node-sass');
 // SASS task
 function scss() {
 	gulp.src(path.app.scss)
+		.pipe(plumber())
+		.pipe(gulpStylelint({
+			failAfterError: false,
+			reporters: [
+				{
+					formatter: 'string',
+					console: true
+				}
+			]
+		}))
 		.pipe(sass({
-			includePaths: ['node_modules']
+			includePaths: ['node_modules'],
+			outputStyle: 'expanded'
 		}).on('error', sass.logError))
+		.pipe(gulp.dest(path.dist.css))
+		.pipe(rename({ suffix: '.min' }))
 		.pipe(postcss([autoprefixer(), cssnano()]))
 		.pipe(gulp.dest(path.dist.css));
 }
@@ -86,16 +113,6 @@ function images() {
 }
 
 // BrowserSync
-// function browserSyncServe() {
-//     browserSync.init({
-//         open: true,
-//         notify: true,
-//         server: './dist',
-//         port: 9000
-//     });
-// }
-
-
 function browserSyncServe(done) {
 	browserSync.init({
 		server: {
@@ -123,7 +140,7 @@ function del() {
 function watchFiles() {
     gulp.watch(path.watch.html, gulp.series(html, browserSyncReload));
     gulp.watch(path.watch.scss, gulp.series(scss, browserSyncReload));
-    gulp.watch(path.watch.js, gulp.series(js, browserSyncReload));
+    gulp.watch(path.watch.js, gulp.series(scriptsLint, scripts));
     gulp.watch(path.watch.images, gulp.series(images));
     gulp.watch(path.watch.fonts, gulp.series(fonts));
 
@@ -131,6 +148,7 @@ function watchFiles() {
 }
 
 // Define complex tasks
+const js = gulp.series(scriptsLint, scripts);
 const build = gulp.series(del, html, scss, js, fonts, images);
 const serve = gulp.parallel(html, scss, js, images, fonts, watchFiles, browserSyncServe);
 

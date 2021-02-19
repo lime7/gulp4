@@ -1,4 +1,19 @@
 // Base
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+
+  @include media-breakpoint-down(xxl) {
+    font-size: 14px;
+  }
+}
+
+body {
+  font-size: $font-size-base;
+  line-height: 1.5 * $font-size-base;
+  font-style: normal;
+}
+
 .icon {
   display: inline-block;
   width: $font-size-base;
@@ -16,18 +31,4 @@
 a[href*="mailto:"],
 a[href*="tel:"] {
   white-space: nowrap;
-}
-
-html {
-  font-size: 16px;
-
-  @include media-breakpoint-down(xxl) {
-    font-size: 14px;
-  }
-}
-
-body {
-  font-size: $font-size-base;
-  line-height: 1.5 * $font-size-base;
-  font-style: normal;
 }

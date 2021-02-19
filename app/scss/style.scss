@@ -1,13 +1,23 @@
 // style.scss
 
+//Configuration and helpers
 @import '_variables';
-//@import '~bootstrap/scss/bootstrap';
+@import 'mixins';
+
+// Vendors
 @import "node_modules/bootstrap/scss/bootstrap";
-//@import "bootstrap/scss/bootstrap";
+
+// Base stuff
 @import 'base';
+
+// Components
 @import 'components';
+
+// Layout-related sections
 @import 'layout';
+
+// Page-specific styles
 @import 'pages';
+
+// Themes
 @import 'themes';
-@import 'utils';
-@import 'vendors';
