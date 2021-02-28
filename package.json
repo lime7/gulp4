@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "gulp start",
+    "start": "gulp serve",
     "build": "gulp build",
     "test": "editorconfig-cli & stylelint ./src/styles/**/*.scss --syntax scss & eslint ./src/js",
     "stylelint-fix": "stylelint ./src/styles/**/*.scss --fix --syntax scss",

@@ -1,23 +1,23 @@
 // Base
 html {
-  font-size: 16px;
+  font-size: $html-font-size;
   scroll-behavior: smooth;
 
-  @include media-breakpoint-down(xxl) {
-    font-size: 14px;
+  @include media-breakpoint-down(lg) {
+    font-size: $html-font-size * 0.875;
   }
 }
 
 body {
-  font-size: $font-size-base;
-  line-height: 1.5 * $font-size-base;
+  font-size: rem($font-size-base);
+  line-height: rem($font-size-base * 1.5);
   font-style: normal;
 }
 
 .icon {
   display: inline-block;
-  width: $font-size-base;
-  height: $font-size-base;
+  width: rem($font-size-base);
+  height: rem($font-size-base);
   stroke-width: 0;
   stroke: currentColor;
   fill: currentColor;

@@ -9,11 +9,9 @@ const gulp          = require('gulp'),
       imagemin      = require('gulp-imagemin'),
       uglify        = require('gulp-uglify'),
       rename        = require('gulp-rename'),
-      watch         = require('gulp-watch'),
       clean         = require('gulp-clean'),
       htmlPartial   = require('gulp-html-partial'),
       browserSync   = require('browser-sync').create(),
-      reload        = browserSync.reload,
       eslint        = require('gulp-eslint'),
       plumber       = require('gulp-plumber'),
       gulpStylelint = require('gulp-stylelint');
@@ -50,7 +48,7 @@ var path = {
 
 // HTML task
 function html() {
-    gulp.src(path.app.html)
+    return gulp.src(path.app.html)
 		.pipe(htmlPartial({
 			basePath: path.app.partials
 		}))
@@ -78,7 +76,7 @@ sass.compiler = require('node-sass');
 
 // SASS task
 function scss() {
-	gulp.src(path.app.scss)
+	return gulp.src(path.app.scss)
 		.pipe(plumber())
 		.pipe(gulpStylelint({
 			failAfterError: false,
@@ -107,7 +105,7 @@ function fonts() {
 
 // IMAGES task
 function images() {
-	gulp.src(path.app.images)
+	return gulp.src(path.app.images)
 		.pipe(imagemin())
 		.pipe(gulp.dest(path.dist.images));
 }
@@ -120,6 +118,7 @@ function browserSyncServe(done) {
 		},
 		port: 9000
 	});
+
 	done();
 }
 
@@ -132,7 +131,7 @@ function browserSyncReload(done) {
 
 // Clean assets
 function del() {
-    return gulp.src(path.clean)
+    return gulp.src(path.clean, {read: false})
         .pipe(clean());
 }
 
@@ -160,4 +159,4 @@ exports.fonts = fonts;
 
 exports.del = del;
 exports.serve = serve;
-exports.default = build;
+exports.build = build;

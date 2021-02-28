@@ -1,1 +1,13 @@
 // Variables
+$html-font-size: 16px;
+
+$font-size-base: $html-font-size;
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px
+) !default;

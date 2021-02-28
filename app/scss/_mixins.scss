@@ -1,0 +1,33 @@
+// Mixins
+@mixin media-breakpoint-up($breakpoint) {
+  @if map-has-key($grid-breakpoints, $breakpoint) {
+    @media (min-width: #{map-get($grid-breakpoints, $breakpoint)}) {
+      @content;
+    }
+  }
+
+  @else {
+    @warn "Please make sure it is defined in `$grid-breakpoints` map.";
+  }
+}
+
+@mixin media-breakpoint-down($breakpoint) {
+  @if map-has-key($grid-breakpoints, $breakpoint) {
+    @media (max-width: #{map-get($grid-breakpoints, $breakpoint)}) {
+      @content;
+    }
+  }
+
+  @else {
+    @warn "Please make sure it is defined in `$grid-breakpoints` map.";
+  }
+}
+
+// Functions
+@function stripUnit($value) {
+  @return $value / ($value * 0 + 1);
+}
+
+@function rem($pxValue) {
+  @return #{stripUnit($pxValue) / stripUnit($html-font-size)}rem;
+}
