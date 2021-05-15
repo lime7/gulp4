@@ -7,6 +7,7 @@ const gulp          = require('gulp'),
       cssnano       = require('cssnano'),
       postcss       = require('gulp-postcss'),
       imagemin      = require('gulp-imagemin'),
+      imageminWebp = require('imagemin-webp'),
       uglify        = require('gulp-uglify'),
       rename        = require('gulp-rename'),
       clean         = require('gulp-clean'),
@@ -106,7 +107,14 @@ function fonts() {
 // IMAGES task
 function images() {
 	return gulp.src(path.app.images)
-		.pipe(imagemin())
+		.pipe(gulp.dest(path.dist.images))
+		.pipe(imagemin({
+			progressive: true,
+			plugins: [
+				imageminWebp({quality: 75})
+			]
+		}))		
+		.pipe(rename({ extname: '.webp' }))
 		.pipe(gulp.dest(path.dist.images));
 }
 
@@ -156,6 +164,7 @@ exports.scss = scss;
 exports.html = html;
 exports.js = js;
 exports.fonts = fonts;
+exports.images = images;
 
 exports.del = del;
 exports.serve = serve;
