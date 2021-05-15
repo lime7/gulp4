@@ -2,6 +2,8 @@
  
 // Load plugins
 const gulp          = require('gulp'),
+      //rigger          = require('gulp-rigger'),
+      concat        = require('gulp-concat'),
       autoprefixer  = require('autoprefixer'),	
       sass          = require('gulp-sass'),
       cssnano       = require('cssnano'),
@@ -52,7 +54,7 @@ function html() {
     return gulp.src(path.app.html)
 		.pipe(htmlPartial({
 			basePath: path.app.partials
-		}))
+		}))		
 		.pipe(gulp.dest(path.dist.html));
 }
 
@@ -69,7 +71,19 @@ function scriptsLint() {
 function scripts() {
 	return gulp.src(path.app.js)
 		.pipe(uglify())
+		//.pipe(rigger())
 		.pipe(gulp.dest(path.dist.js));
+}
+
+// JS Vendor task
+function vendor() {
+	return gulp.src([
+			'app/js/test.js',
+			'node_modules/bootstrap/dist/js/bootstrap.bundle.min.js'			
+		])
+		.pipe(concat('vendor.js'))
+		.pipe(uglify())
+		.pipe(gulp.dest('dist/js/'));
 }
 
 
@@ -147,7 +161,7 @@ function del() {
 function watchFiles() {
     gulp.watch(path.watch.html, gulp.series(html, browserSyncReload));
     gulp.watch(path.watch.scss, gulp.series(scss, browserSyncReload));
-    gulp.watch(path.watch.js, gulp.series(scriptsLint, scripts));
+    gulp.watch(path.watch.js, gulp.series(scriptsLint, scripts, vendor));
     gulp.watch(path.watch.images, gulp.series(images));
     gulp.watch(path.watch.fonts, gulp.series(fonts));
 
@@ -155,7 +169,7 @@ function watchFiles() {
 }
 
 // Define complex tasks
-const js = gulp.series(scriptsLint, scripts);
+const js = gulp.series(scriptsLint, scripts, vendor);
 const build = gulp.series(del, html, scss, js, fonts, images);
 const serve = gulp.parallel(html, scss, js, images, fonts, watchFiles, browserSyncServe);
 
